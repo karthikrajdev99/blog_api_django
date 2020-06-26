@@ -19,7 +19,7 @@ class Post(models.Model):
     short_description = models.TextField(max_length=255)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', related_query_name='post')
-    image = CloudinaryField('image', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True, chunk_size=1000000)
     slug = models.SlugField(blank=True, null=True)
     is_published = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -66,6 +66,7 @@ def update_published_on(sender, instance, **kwargs):
             instance.published_on = timezone.now()
 
 
-@receiver(pre_delete, sender=Post)
-def picture_delete(sender, instance, **kwargs):
-    cloudinary.uploader.destroy(instance.image.public_id)
+# @receiver(pre_delete, sender=Post)
+# def picture_delete(sender, instance, **kwargs):
+#     if instance.image not null:
+#     cloudinary = cloudinary.uploader.destroy(instance.image.public_id)
