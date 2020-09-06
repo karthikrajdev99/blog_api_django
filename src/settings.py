@@ -24,8 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG is kept true in production because Django-rest-swagger doesn't work if debug is false  
+DEBUG = True
 
 ALLOWED_HOSTS = ['developers-blog-api.herokuapp.com']
 
@@ -47,14 +47,15 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
+    'dj_rest_auth',
+    'drf_yasg',
     
     'accounts',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth.registration',
+    'dj_rest_auth.registration',
 
 ]
 
@@ -107,12 +108,12 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE" : "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3")
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE" : "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3")
+    }
+}
 
 
 # Password validation
@@ -168,9 +169,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
 }
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -184,6 +183,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'accounts.api.serializers.UserDetailsSerializer',
     'LOGIN_SERIALIZER': 'accounts.api.serializers.LoginSerializer',
+    'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer'
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
@@ -191,6 +191,8 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 }
 
 REST_USE_JWT = True
+
+JWT_AUTH_COOKIE = 'blog-api-auth'
 
 # Static
 STATIC_URL = '/static/'

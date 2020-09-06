@@ -7,4 +7,4 @@ from .views import CommentViewSet
 router = DefaultRouter()
 router.register(r'comment', CommentViewSet)
 
-urlpatterns = [path(r'^', include(router.urls))]
+urlpatterns = [path(r'', include(router.urls))]

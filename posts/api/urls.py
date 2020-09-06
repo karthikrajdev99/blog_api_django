@@ -7,4 +7,4 @@ from .views import PostViewSet
 router = DefaultRouter()
 router.register(r'post', PostViewSet)
 
-urlpatterns = [path(r'^', include(router.urls))]
+urlpatterns = [path(r'', include(router.urls))]
